@@ -24,10 +24,9 @@ style: install
 	poetry run black toubib tests
 
 run-alembic: install data
-	sqlalchemy_url='sqlite:///data/db.sqlite?check_same_thread=false' poetry run alembic upgrade head
-
+	set SQLALCHEMY_URL=sqlite:///data/db.sqlite?check_same_thread=false && poetry run alembic upgrade head
 run-app: run-alembic
-	sqlalchemy_url='sqlite:///data/db.sqlite?check_same_thread=false' poetry run hypercorn toubib.main:app --reload
+	set sqlalchemy_url=sqlite:///data/db.sqlite?check_same_thread=false && poetry run hypercorn toubib.main:app --reload
 
 
 # Using docker
