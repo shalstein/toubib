@@ -36,7 +36,7 @@ def upgrade():
             sa.Enum("FEMALE", "MALE", name="sex_at_birth_enum"),
             nullable=False,
         ),
-        sa.Column("email", sa.String, nullable=False),
+        sa.Column("email", sa.String, nullable=False, unique=True),
     )
 
 
