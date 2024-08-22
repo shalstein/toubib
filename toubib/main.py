@@ -9,7 +9,7 @@ from structlog import get_logger
 from enum import Enum
 from .sqla import Doctor, Patient
 from sqlalchemy import select, func
-
+from sqlalchemy.exc import IntegrityError
 
 log = get_logger()
 
@@ -82,8 +82,19 @@ def list_patients(paginate=Depends(Paginate)):
 @app.post("/v1/patients", response_model=Item[PatientModel], status_code=201)
 def create_patient(*, body: PatientIn, session: Session = Depends()):
     patient = Patient(**body.dict())
-    session.add(patient)
-    session.flush()
+    try:
+        session.add(patient)
+        session.flush()
+    except IntegrityError as e:
+        session.rollback()
+        if "UNIQUE constraint failed" in str(e.orig):
+            raise HTTPException(
+                status_code=400, detail="A patient with this email already exists."
+            )
+        # Handle other integrity errors
+        raise HTTPException(
+            status_code=500, detail="An error occurred while processing your request."
+        )
     return {"data": patient}
 
 
