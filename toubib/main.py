@@ -36,6 +36,25 @@ class DoctorModel(DoctorIn):
         orm_mode = True
 
 
+class GenderEnum(str, Enum):
+    female = "FEMALE"
+    male = "MALE"
+
+
+class PatientIn(BaseModel):
+    email: EmailStr
+    first_name: str
+    last_name: str
+    date_of_birth: date
+    sex_at_birth: GenderEnum
+
+
+class PatientModel(PatientIn):
+    id: int
+
+    class Config:
+        orm_mode = True
+
 @app.post("/v1/doctors", response_model=Item[DoctorModel], status_code=201)
 def create_doctor(*, body: DoctorIn, session: Session = Depends()):
     doctor = Doctor(**body.dict())
