@@ -3,11 +3,13 @@ from importlib.metadata import version
 
 import fastapi_sqla
 from fastapi import Depends, FastAPI, HTTPException
-from fastapi_sqla import Item, Session
-from pydantic import BaseModel
+from fastapi_sqla import Item, Session, Page, Paginate
+from pydantic import BaseModel, EmailStr
 from structlog import get_logger
+from enum import Enum
+from .sqla import Doctor, Patient
+from sqlalchemy import select, func
 
-from .sqla import Doctor
 
 log = get_logger()
 
@@ -55,6 +57,7 @@ class PatientModel(PatientIn):
     class Config:
         orm_mode = True
 
+
 @app.post("/v1/doctors", response_model=Item[DoctorModel], status_code=201)
 def create_doctor(*, body: DoctorIn, session: Session = Depends()):
     doctor = Doctor(**body.dict())
@@ -71,16 +74,22 @@ def get_doctor(*, doctor_id: int, session: Session = Depends()):
     return {"data": doctor}
 
 
-@app.get("/v1/patients")
-def list_patients():
-    pass
+@app.get("/v1/patients", response_model=Page[PatientModel])
+def list_patients(paginate=Depends(Paginate)):
+    return paginate(select(Patient).order_by(func.lower(Patient.last_name)))
 
 
-@app.post("/v1/patients")
-def create_patient():
-    pass
+@app.post("/v1/patients", response_model=Item[PatientModel], status_code=201)
+def create_patient(*, body: PatientIn, session: Session = Depends()):
+    patient = Patient(**body.dict())
+    session.add(patient)
+    session.flush()
+    return {"data": patient}
 
 
-@app.get("/v1/patients/{patient_id}")
-def get_patient():
-    pass
+@app.get("/v1/patients/{patient_id}", response_model=Item[PatientModel])
+def get_patient(patient_id: int, session: Session = Depends()):
+    patient = session.get(Patient, patient_id)
+    if patient is None:
+        raise HTTPException(404)
+    return {"data": patient}
