@@ -3,7 +3,7 @@ async def test_create_patient(client, faker):
         "email": faker.ascii_email(),
         "first_name": faker.first_name(),
         "last_name": faker.last_name(),
-        "date_of_birth": faker.date_time,
+        "date_of_birth": faker.date(),
         "sex_at_birth": "FEMALE",
     }
     res = await client.post("/v1/patients", json=body)
