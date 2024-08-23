@@ -91,7 +91,6 @@ def create_patient(*, body: PatientIn, session: Session = Depends()):
             raise HTTPException(
                 status_code=400, detail="A patient with this email already exists."
             )
-        # Handle other integrity errors
         raise HTTPException(
             status_code=500, detail="An error occurred while processing your request."
         )
