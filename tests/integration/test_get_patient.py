@@ -1,5 +1,6 @@
-from pytest import fixture
 from datetime import datetime
+
+from pytest import fixture
 
 
 @fixture

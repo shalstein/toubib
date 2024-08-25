@@ -1,5 +1,5 @@
 from fastapi_sqla import Base
-from sqlalchemy import Column, String, Enum, Integer, Date, DateTime, func
+from sqlalchemy import Column, Date, DateTime, Enum, Integer, String, func
 
 
 class Doctor(Base):

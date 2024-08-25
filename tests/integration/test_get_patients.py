@@ -1,5 +1,6 @@
-from pytest import fixture
 from datetime import datetime
+
+from pytest import fixture
 
 
 @fixture
@@ -27,11 +28,10 @@ def sorted_patient_ids(faker, session):
 
 
 async def test_get_patients(client, sorted_patient_ids):
-    res = await client.get(f"/v1/patients")
+    res = await client.get("/v1/patients")
     assert res.status_code == 200
     data = res.json()["data"]
 
-    print([patient["id"] for patient in data])
     assert [patient["id"] for patient in data] == sorted_patient_ids[
         :10
     ], f"Expected first 10 sorted patient IDs {sorted_patient_ids[:10]}, but got {[patient['id'] for patient in data]}"

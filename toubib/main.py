@@ -1,15 +1,16 @@
 from datetime import date
+from enum import Enum
 from importlib.metadata import version
 
 import fastapi_sqla
 from fastapi import Depends, FastAPI, HTTPException
-from fastapi_sqla import Item, Session, Page, Paginate
+from fastapi_sqla import Item, Page, Paginate, Session
 from pydantic import BaseModel, EmailStr
-from structlog import get_logger
-from enum import Enum
-from .sqla import Doctor, Patient
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
+from structlog import get_logger
+
+from .sqla import Doctor, Patient
 
 log = get_logger()
 
