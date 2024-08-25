@@ -11,7 +11,7 @@ def patient_no(faker, session):
         first_name=faker.first_name(),
         last_name=faker.last_name(),
         date_of_birth=datetime.strptime(faker.date(), "%Y-%m-%d"),
-        sex_at_birth="FEMALE",
+        sex_at_birth=faker.random_element(["FEMALE", "MALE"]),
     )
     session.add(patient)
     session.flush()

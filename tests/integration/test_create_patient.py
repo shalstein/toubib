@@ -4,7 +4,7 @@ async def test_create_patient(client, faker):
         "first_name": faker.first_name(),
         "last_name": faker.last_name(),
         "date_of_birth": faker.date(),
-        "sex_at_birth": "FEMALE",
+        "sex_at_birth": faker.random_element(["FEMALE", "MALE"]),
     }
     res = await client.post("/v1/patients", json=body)
     assert res.status_code == 201
