@@ -6,7 +6,7 @@ authors = ["Hackers <hackers@dialogue.co>"]
 
 [tool.poetry.dependencies]
 python = "^3.10.0"
-fastapi = "^0.75"
+fastapi = "^0.109"
 fastapi-sqla = "^2.3"
 SQLAlchemy = "^1.4"
 alembic = "^1.7"
